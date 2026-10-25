@@ -1,0 +1,11 @@
+[package]
+name = "reez-lvgl"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+links = "lvgl"
+[features]
+default = ["desktop"]
+desktop = []
+[build-dependencies]
+bindgen = "0.72"

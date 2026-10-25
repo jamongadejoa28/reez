@@ -1,0 +1,14 @@
+{
+  "id": "reez-rust-output",
+  "name": "reez-rust-output",
+  "displayName": "Reez Rust Output",
+  "version": "0.2.0",
+  "author": "Reez contributors",
+  "description": "Generate Rust UI alongside the normal EEZ build",
+  "license": "GPL-3.0-only",
+  "main": "index.js",
+  "eez-studio": {
+    "node-module": true,
+    "moreDescription": "Build Rust UI alongside C/C++. Includes the Rust WebAssembly generator and font converter; no Rust, Node.js or WSL installation required. Open the Rust output panel to enable each project."
+  }
+}

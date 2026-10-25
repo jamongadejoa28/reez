@@ -1,0 +1,6 @@
+{
+  "studio": {"version": "0.29.0", "repository": "https://github.com/eez-open/studio", "adapter": "runtime extension; app.asar is not modified"},
+  "lvgl": {"repository": "https://github.com/lvgl/lvgl.git", "tag": "v9.5.0", "commit": "85aa60d18b3d5e5588d7b247abf90198f07c8a63"},
+  "rust": "1.99.1",
+  "lv_font_conv": "1.5.3"
+}

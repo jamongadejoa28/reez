@@ -1,0 +1,29 @@
+[workspace]
+resolver = "3"
+members = ["crates/reez", "crates/reez-lvgl", "crates/monitor"]
+default-members = ["crates/reez"]
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.99"
+version = "0.2.0"
+license = "MIT"
+
+[profile.dev]
+debug = 0
+incremental = true
+lto = false
+
+[profile.test]
+debug = 0
+incremental = true
+lto = false
+
+[profile.dev-debug]
+inherits = "dev"
+debug = 2
+
+[profile.release]
+debug = 0
+strip = "debuginfo"
+lto = "thin"

@@ -1,0 +1,31 @@
+Reez Rust Output — installation
+
+WINDOWS x64 / EEZ Studio 0.29.0
+1. Open EEZ Studio's Extensions Manager.
+2. Choose the action to install an extension from a local ZIP and select this ZIP.
+3. Restart EEZ Studio after saving your open projects.
+4. Open a saved LVGL 9.5.0 project without EEZ Flow.
+5. Click "Rust output" in the top-right panel, check "Enable Rust output for this
+   project", choose an output folder (default rust-src), and click Save.
+6. Click the normal Build button. C/C++ and Rust files will both be generated.
+
+This package includes the Rust WebAssembly generator and font converter. Rust, Node.js,
+Python, and WSL are not required on the user's machine. Both use
+EEZ Studio's own Electron/Node runtime. No network access or MCP token is needed.
+
+Alternative Windows installation: extract this ZIP and run install.ps1 from
+PowerShell. It installs for the current user without administrator privileges.
+If PowerShell script execution is restricted, use the Extensions Manager.
+To uninstall using that script: .\install.ps1 -Uninstall
+Close Studio before replacing or removing extension files.
+
+Updates: install a newer Reez ZIP, then restart Studio. Settings
+in each project's reez.json and generated sources are preserved.
+
+Support: screen, container, button, label, local styles and single-source fonts.
+EEZ Flow, declared actions/variables, expressions, images, shared styles and
+other unsupported features are reported as errors. See SUPPORT.md in this ZIP.
+
+Source code for this release is included under source/. The Studio adapter is
+GPL-3.0-only; the generator is MIT. Third-party notices are bundled in licenses/.
+No standalone generator executable is installed.

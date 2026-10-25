@@ -1,0 +1,13 @@
+[package]
+name = "reez-monitor"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+[dependencies]
+reez-lvgl = { path = "../reez-lvgl" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+libc = "0.2"
+[build-dependencies]
+reez = { path = "../reez" }
+serde_json = "1"

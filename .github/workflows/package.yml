@@ -1,0 +1,55 @@
+name: Build Reez extension
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.10.2'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.21.1'
+          cache: npm
+      - run: uv sync --locked
+      - run: uv run --locked rustup toolchain install 1.99.1 --profile minimal --component rust-docs
+      - run: uv run --locked rustup target add wasm32-wasip1 --toolchain 1.99.1
+      - run: uv run --locked npm ci
+      - run: uv run --locked cargo build --locked -p reez
+      - run: uv run --locked cargo test --locked -p reez
+      - run: uv run --locked node --test tests/studio.test.cjs
+      - run: uv run --locked pytest -q tests/test_generator.py -k 'not without_std'
+      - run: uv run --locked python tools/build_release.py
+      - run: uv run --locked python tools/package.py
+      - run: uv run --locked pytest -q tests/test_package.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reez-rust-output
+          path: |
+            artifacts/releases/*.zip
+            artifacts/releases/*.sha256
+          if-no-files-found: error
+  windows-smoke:
+    runs-on: windows-latest
+    needs: package
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: reez-rust-output
+          path: release
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.21.1'
+      - shell: pwsh
+        run: |
+          Expand-Archive (Get-ChildItem release/*.zip).FullName -DestinationPath 'extension with spaces'
+          node 'extension with spaces/wasi-runner.js' --version
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node 'extension with spaces/wasi-runner.js' --project 'extension with spaces/source/tests/fixtures/minimal.eez-project' --out 'extension with spaces/rust output'
+          exit $LASTEXITCODE

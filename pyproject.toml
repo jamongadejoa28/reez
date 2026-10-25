@@ -1,0 +1,13 @@
+[project]
+name = "reez-dev"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "cmake>=4.4.4",
+    "ninja>=1.13.2",
+    "pillow>=13.0.0",
+    "pytest>=9.1.1",
+]

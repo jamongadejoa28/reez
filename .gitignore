@@ -1,0 +1,7 @@
+.venv/
+target/
+.tools/
+node_modules/
+artifacts/
+__pycache__/
+.pytest_cache/
