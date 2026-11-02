@@ -14,7 +14,13 @@ def demo(tmp_path):
     with socket.socket() as s:s.bind(('127.0.0.1',0));port=s.getsockname()[1]
     control=tmp_path/'control.json';control.write_text(json.dumps({'temperature':-12.5,'humidity':62.3,'alarm_word1':1025}))
     env=dict(os.environ);env.pop('VIRTUAL_ENV',None)
-    process=subprocess.Popen(['uv','run','--locked','python','-m','tools.demo','--port',str(port),'--control-file',str(control)],cwd=WOKWI,env=env,stdout=subprocess.DEVNULL)
+    if os.environ.get('REEZ_REFERENCE_C') == '1':
+        command=['uv','run','--locked','python','-m','tools.demo','--port',str(port),'--control-file',str(control)]
+        cwd=WOKWI
+    else:
+        command=[str(ROOT/'target/debug/reez-firmware-host'),'--port',str(port),'--control-file',str(control),'--trace',str(tmp_path/'rtu.jsonl')]
+        cwd=ROOT
+    process=subprocess.Popen(command,cwd=cwd,env=env,stdout=subprocess.DEVNULL)
     url=f'http://127.0.0.1:{port}'
     try:
         for _ in range(60):

@@ -1,7 +1,3 @@
-"""Build the portable Rust generator included in the EEZ extension ZIP."""
-from pathlib import Path
-import subprocess
-ROOT = Path(__file__).resolve().parents[1]
-if __name__ == '__main__':
-    subprocess.run(['cargo','build','--locked','--release','-p','reez','--target','wasm32-wasip1'],cwd=ROOT,check=True)
-    print(ROOT/'target/wasm32-wasip1/release/reez.wasm')
+"""Assemble the pinned C conversion runtime for the Studio extension."""
+from build_c_backend import build,ROOT
+if __name__=='__main__':build(ROOT/'artifacts/c-backend-runtime')

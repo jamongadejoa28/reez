@@ -1,0 +1,8 @@
+[package]
+name = "reez-firmware-host"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+[dependencies]
+reez-controller = { path = "../controller" }
+serde_json = "1"

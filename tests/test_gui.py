@@ -83,3 +83,38 @@ def test_command_failure_never_retries_or_claims_success(demo,tmp_path,mode):
         ui(f'http://127.0.0.1:{server.server_port}','--frames',180,'--script',script,'--report',report)
         r=json.loads(report.read_text());assert len(posts)==1;assert not r['pending'];assert '완료' not in r['notice'];assert '실패' in r['notice']
     finally:server.shutdown();server.server_close();thread.join()
+
+def test_studio_ui_and_rust_firmware_end_to_end(demo,tmp_path):
+    url,_=demo
+    state=json.load(urllib.request.urlopen(url+'/api/state'))
+    assert state['firmware_engine']=='rust' and state['transport']=='modbus-rtu'
+    report=tmp_path/'report.json';shot=tmp_path/'rust-complete.bmp'
+    ui(url,'--frames',1500,'--exercise-mock','--report',report,'--screenshot',shot)
+    result=json.loads(report.read_text())
+    assert result['firmware_engine']=='rust' and result['ui_language']=='rust'
+    assert result['lvgl_backend']=='c-lvgl-9.5.0'
+    if os.environ.get('EEZ_RUST_SRC'):
+        assert result['ui_origin']=='studio-output'
+        from pathlib import Path
+        assert Path(result['ui_source']).resolve()==Path(os.environ['EEZ_RUST_SRC']).resolve()
+    assert result['screen']=='alarms'
+    assert result['values']['set_temp']==23.1 and result['values']['power_on']==0
+    frames=[json.loads(line) for line in (tmp_path/'rtu.jsonl').read_text().splitlines()]
+    writes=[f for f in frames if f['fc']==6]
+    assert [(w['address'],int.from_bytes(w['request'][4:6],'big')) for w in writes]==[(11,231),(4,1),(4,0)]
+    assert all(f['engine']=='rust' for f in frames)
+    assert Image.open(shot).size==(800,480)
+
+def test_rust_firmware_lost_rtu_ack_is_not_retried(demo,tmp_path):
+    url,control=demo
+    control.write_text('{"lost_write_ack":true}')
+    script=tmp_path/'script.json';script.write_text('[{"frame":70,"click":"run"}]')
+    report=tmp_path/'report.json'
+    ui(url,'--frames',200,'--script',script,'--report',report)
+    result=json.loads(report.read_text())
+    assert result['firmware_engine']=='rust' and not result['pending']
+    assert '실패' in result['notice']
+    state=json.load(urllib.request.urlopen(url+'/api/state'))
+    assert state['command_status']=='unconfirmed' and state['values']['power_on']==1
+    writes=[json.loads(line) for line in (tmp_path/'rtu.jsonl').read_text().splitlines() if json.loads(line)['fc']==6]
+    assert len(writes)==1 and writes[0]['response']==[]

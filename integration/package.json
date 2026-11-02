@@ -2,13 +2,13 @@
   "id": "reez-rust-output",
   "name": "reez-rust-output",
   "displayName": "Reez Rust Output",
-  "version": "0.2.0",
+  "version": "0.3.3",
   "author": "Reez contributors",
-  "description": "Generate Rust UI alongside the normal EEZ build",
+  "description": "Translate completed EEZ C build outputs to equivalent Rust source",
   "license": "GPL-3.0-only",
   "main": "index.js",
   "eez-studio": {
     "node-module": true,
-    "moreDescription": "Build Rust UI alongside C/C++. Includes the Rust WebAssembly generator and font converter; no Rust, Node.js or WSL installation required. Open the Rust output panel to enable each project."
+    "moreDescription": "C-output backend: converts generated C files with C2Rust/Clang. Windows uses a local x64 WSL backend (Python 3.11+; Cargo for compile checks). Supply the real compile_commands.json for target-specific headers and macros. No project/widget whitelist."
   }
 }

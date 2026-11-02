@@ -16,14 +16,15 @@ def setup():
     if actual!=expected:raise SystemExit(f'LVGL revision mismatch: {actual}')
     print('LVGL source verified:',actual)
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('action',choices=['setup','build','generate','run','test','lint','install-studio','build-studio','benchmark']);a,extra=p.parse_known_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('action',choices=['setup','build','generate','run','test','lint','install-studio','build-studio','benchmark','firmware-demo','validate-firmware']);a,extra=p.parse_known_args()
     if a.action=='setup':setup()
     elif a.action=='build':run('cargo','build','--locked','--workspace',*extra)
     elif a.action=='generate':run('cargo','run','--locked','-p','reez','--',*extra)
     elif a.action=='run':run(ROOT/'target/debug/reez-monitor',*extra)
+    elif a.action=='firmware-demo':run(ROOT/'target/debug/reez-firmware-host',*extra)
     elif a.action=='lint':
         run('cargo','fmt','--all','--check');run('cargo','clippy','--locked','--workspace','--all-targets','--','-D','warnings')
     elif a.action=='test':
         run('cargo','test','--locked','--workspace');run(sys.executable,'tools/reference.py');run('node','--test','tests/studio.test.cjs');run(sys.executable,'-m','pytest','-q',*extra)
-    else:run(sys.executable,{'install-studio':'tools/install_studio.py','build-studio':'tools/studio_build.py','benchmark':'tools/benchmark.py'}[a.action],*extra)
+    else:run(sys.executable,{'install-studio':'tools/install_studio.py','build-studio':'tools/studio_build.py','benchmark':'tools/benchmark.py','validate-firmware':'tools/validate_firmware.py'}[a.action],*extra)
 if __name__=='__main__':main()

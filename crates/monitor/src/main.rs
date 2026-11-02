@@ -2,6 +2,7 @@
 mod network;
 include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 use network::{Command, Shared};
+use reez_controller::FIELDS;
 use reez_lvgl::{color, pad, pct, sys::*, text};
 use std::{
     cell::RefCell,
@@ -11,19 +12,6 @@ use std::{
     sync::{Arc, Mutex, mpsc},
     time::{Duration, Instant},
 };
-#[derive(Debug)]
-pub struct Field {
-    name: &'static str,
-    label: &'static str,
-    address: i32,
-    scale: i32,
-    writable: bool,
-    stopped_only: bool,
-    minimum: i32,
-    maximum: i32,
-    disable: i32,
-}
-include!(concat!(env!("OUT_DIR"), "/fields.rs"));
 fn index(name: &str) -> usize {
     FIELDS.iter().position(|f| f.name == name).expect("field")
 }
@@ -637,7 +625,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let active = ["main", "settings", "trend", "status", "alarms"]
                     .into_iter()
                     .find(|name| a.obj(name) == lv_screen_active());
-                let result = serde_json::json!({"online":sh.online(),"pending":sh.busy,"notice":sh.notice,"history_count":a.history.len(),"history":a.history,"alarms":a.previous,"controls_disabled":disabled,"screen":active,"selected":FIELDS[a.selected].name,"edit_raw":a.edit,"values":sh.state.values,"command_id":sh.state.command_id});
+                let result = serde_json::json!({"ui_origin":env!("REEZ_UI_ORIGIN"),"ui_source":env!("REEZ_UI_SOURCE"),"ui_language":"rust","lvgl_backend":"c-lvgl-9.5.0","firmware_engine":sh.state.firmware_engine,"online":sh.online(),"pending":sh.busy,"notice":sh.notice,"history_count":a.history.len(),"history":a.history,"alarms":a.previous,"controls_disabled":disabled,"screen":active,"selected":FIELDS[a.selected].name,"edit_raw":a.edit,"values":sh.state.values,"command_id":sh.state.command_id});
                 std::fs::write(path, serde_json::to_vec_pretty(&result)?)?;
             }
         }

@@ -4,6 +4,7 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 [dependencies]
+reez-controller = { path = "../controller" }
 reez-lvgl = { path = "../reez-lvgl" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"

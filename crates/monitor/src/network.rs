@@ -20,6 +20,8 @@ pub struct State {
     #[serde(default)]
     pub error: String,
     pub values: BTreeMap<String, f64>,
+    #[serde(default)]
+    pub firmware_engine: String,
 }
 impl State {
     pub fn value(&self, k: &str) -> f64 {

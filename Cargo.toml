@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["crates/reez", "crates/reez-lvgl", "crates/monitor"]
+members = ["crates/reez", "crates/reez-lvgl", "crates/monitor", "crates/controller", "crates/firmware-host"]
 default-members = ["crates/reez"]
 
 [workspace.package]

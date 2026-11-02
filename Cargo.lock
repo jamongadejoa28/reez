@@ -224,6 +224,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "reez-controller"
+version = "0.2.0"
+dependencies = [
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "reez-firmware-host"
+version = "0.2.0"
+dependencies = [
+ "reez-controller",
+ "serde_json",
+]
+
+[[package]]
 name = "reez-lvgl"
 version = "0.2.0"
 dependencies = [
@@ -236,6 +252,7 @@ version = "0.2.0"
 dependencies = [
  "libc",
  "reez",
+ "reez-controller",
  "reez-lvgl",
  "serde",
  "serde_json",
